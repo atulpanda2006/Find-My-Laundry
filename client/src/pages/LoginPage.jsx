@@ -1,9 +1,57 @@
 import { useState } from "react";
 import ToggleThemeButton from '../components/ToggleThemeButton'
+import { useNavigate } from "react-router";
+import axios from 'axios'
 
 function LoginPage(props) {
 
+  const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
+  const [loginInfo, setLoginInfo] = useState({'username': '', 'password': ''})
+  const [invalidUsername, setInvalidUsername] = useState(false)
+  const [invalidPassword, setInvalidPassword] = useState(false)
+  const [invalidCredentials,setInvalidCredentials] = useState(false)
+  const [loading,setLoading] = useState(false)
+
+  function handleInput(e) {
+    setLoginInfo(prev => {
+      return {...prev, [e.target.name]: e.target.value}
+    })
+  }
+
+  async function handleSubmit() {
+    if(loginInfo.username.trim().length == 0) {
+      setInvalidUsername(true)
+      setTimeout(() => setInvalidUsername(false), 1500)
+    }
+    if(loginInfo.password.trim().length == 0) {
+      setInvalidPassword(true)
+      setTimeout(() => setInvalidPassword(false), 1500)
+    }
+
+    if(loginInfo.username.trim().length > 0 && loginInfo.password.trim().length > 0) {
+      setLoading(true)
+      try{
+        const res = await axios.post('https://find-my-laundry.vercel.app/auth/login',
+                                      {"username": loginInfo.username, "password": loginInfo.password},
+                                      {'headers': {'Content-Type': 'application/json'}})
+        localStorage.setItem('token', res.data.token);
+        navigate('/staff')
+        console.log(loginInfo)
+        console.log('login succesfull')
+      }
+      catch (err) {
+        setInvalidCredentials(true)
+        setTimeout(() => setInvalidCredentials(false), 1500)
+        console.log(err)
+      }
+      finally {
+        setLoading(false)
+      }
+    }
+  }
+
   return (
 
     <div
@@ -67,7 +115,9 @@ function LoginPage(props) {
             <input
               type="text"
               id="username"
-              placeholder="John Doe"
+              placeholder="admin"
+              name="username"
+              value={loginInfo.username}
               className={`
                 outline-none
                 bg-transparent
@@ -78,6 +128,7 @@ function LoginPage(props) {
                   : "placeholder:text-gray-400"
                 }
               `}
+              onChange={handleInput}
             />
 
           </div>
@@ -88,6 +139,7 @@ function LoginPage(props) {
           </div>
 
         </div>
+         {invalidUsername && <p className="text-red-400 ml-5">Invalid Username...</p>}
         <br />
 
         <div
@@ -121,7 +173,9 @@ function LoginPage(props) {
             <input
               type={showPassword ? "text" : "password"}
               id="password"
-              placeholder="**********"
+              placeholder="your password"
+              name="password"
+              value={loginInfo.password}
               className={`
                 outline-none
                 bg-transparent
@@ -132,8 +186,8 @@ function LoginPage(props) {
                   : "placeholder:text-gray-400"
                 }
               `}
+              onChange={handleInput}
             />
-
 
             <button
               onClick={() => setShowPassword(!showPassword)}
@@ -198,11 +252,13 @@ function LoginPage(props) {
             </button>
 
           </div>
-          
 
         </div>
+        {invalidPassword && <p className="text-red-400 ml-5">Invalid Password...</p>}
 
               <br />
+        {invalidCredentials && <p className="text-red-400 ml-5">Invalid Credentials</p>}
+        
 
 
         <button
@@ -224,8 +280,10 @@ function LoginPage(props) {
               : "bg-gray-800 border-gray-700 hover:bg-gray-700"
             }
           `}
+
+          onClick={handleSubmit}
         >
-          Login
+        {loading? 'Loging in... Please wait' : 'Login'}
         </button>
 
       </div>
