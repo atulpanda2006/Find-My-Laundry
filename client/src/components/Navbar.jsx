@@ -16,14 +16,26 @@ function NavBar(props) {
     { name: "Collected", icon: <NavBar_Cart /> },
   ];
 
-  return (
-    <div className={`min-h-screen  ${props.lightTheme ? "bg-gray-50" : "bg-zinc-950"}`}>
-      <div className="max-w-full">
+  function handleTabChange(tab) {
+    setActiveTab(tab)
+    if(tab == 'All') {
+      const fildteredData =  props.allBagsData
+      props.setStaffRenderedBags(fildteredData)
+      props.setBagsCount(fildteredData.length)
+    }
+    else if(props.allBagsData != null){
+        const fildteredData = props.allBagsData.filter(data => data.status == tab)
+        props.setStaffRenderedBags(fildteredData)
+        props.setBagsCount(fildteredData.length)
+    }
+  }
 
+  return (
        
         <div
           className={`
-            grid grid-cols-5 w-full border-2 rounded-t-4xl overflow-hidden
+            max-w-full ${props.lightTheme ? "bg-gray-50" : "bg-zinc-950"}
+            grid grid-cols-5 w-full border-1 rounded-t-2xl overflow-hidden
             sm:text-xl md:text-2xl lg:text-3xl
             transition-all duration-300
             ${props.lightTheme ? "bg-white border-black" : "bg-zinc-900 border-zinc-700"}
@@ -31,10 +43,12 @@ function NavBar(props) {
         >
           {navItems.map((item, index) => (
             <button
-              key={item.name}
-              onClick={() => setActiveTab(item.name)}
+              key={index}
+              onClick={() => {
+                handleTabChange(item.name)
+              }}
               className={`
-                flex flex-col items-center justify-center py-6 gap-2 cursor-pointer transition-all duration-300
+                flex flex-col items-center justify-center py-1 gap-2 cursor-pointer transition-all duration-300
                 
                
                 ${index !== navItems.length - 1 
@@ -48,8 +62,8 @@ function NavBar(props) {
                     : (props.lightTheme ? "bg-transparent text-black hover:bg-gray-100" : "bg-transparent text-zinc-400 hover:bg-zinc-800")
                 }
 
-                ${index === 0 ? "rounded-tl-[30px]" : ""}
-                ${index === navItems.length - 1 ? "rounded-tr-[30px]" : ""}
+                ${index === 0 ? "rounded-tl-[15px]" : ""}
+                ${index === navItems.length - 1 ? "rounded-tr-[15px]" : ""}
               `}
             >
               <div className="scale-75 md:scale-100">{item.icon}</div>
@@ -59,8 +73,6 @@ function NavBar(props) {
             </button>
           ))}
         </div>
-      </div>
-    </div>
   );
 }
 

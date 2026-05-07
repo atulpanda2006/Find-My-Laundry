@@ -34,8 +34,6 @@ function UserPage(props) {
         if(searchInputId) {
             try {
                 setSearchMessage('Searching...')
-                setUserSearchResult(null)
-                // setUserRecentSearch(null)
                 const bag = await axios.get(`https://find-my-laundry.vercel.app/laundries/${searchInputId}`)
                 setSearchMessage('')
                 setUserSearchResult(bag.data);
