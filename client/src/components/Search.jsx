@@ -1,6 +1,8 @@
 import search from "../assets/icons/search.svg";
+import { useState } from "react";
 
-function Search() {
+function Search(props) {
+    const [searchInput, setsearchInput] = useState('')
   return (
 
     <div>
@@ -24,21 +26,21 @@ function Search() {
           />
 
           <input
-            type="text"
-            placeholder="Search Bag ID"
+            type="number"
+            placeholder="Search Laundry bag number"
+            onChange={e => setsearchInput(e.target.value)}
+            value={searchInput}
             className="
               outline-none
               text-gray-600
-              text-3xl
-           
-              
+              text-2xl
             "
           />
 
         </div>
 
         <div className="text-gray-500 text-sm">
-          <button className="px-4 py-2 bg-[#363532] rounded-2xl text-amber-100 text-sm cursor-pointer">Go</button>
+          <button className="px-4 py-2 bg-[#363532] rounded-2xl text-amber-100 text-sm cursor-pointer" onClick={() => props.handleSearch(searchInput)}>Go</button>
         </div>
 
       </div>

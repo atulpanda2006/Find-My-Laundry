@@ -1,46 +1,65 @@
 import { useEffect, useState } from 'react'
+import axios from 'axios'
+import ToggleThemeButton from '../components/ToggleThemeButton'
+import UserBagBox from '../components/UserBagBox'
+import Search from '../components/Search'
 function UserPage(props) {
 
-    const [userRecentSearch, setUserRecentSearch] = useState(null) // It stores user's recent search results
+    const [userRecentSearch, setUserRecentSearch] = useState([]) // It stores user's recent search results
     const [userSearchResult, setUserSearchResult] = useState(null) // It stores user's search result's data
+    const [loading, setLoading] = useState(false)
+    const [searchMessage, setSearchMessage] = useState('')
 
     useEffect(() => {
         // Loads recent search bag ids.
-        const recentSearch = JSON.parse(localStorage.getItem('userRecentSearch'))
-        const prevData = []
-        if(recentSearch != null && recentSearch.length > 0) { 
-            recentSearch.forEach(async (id) => {
-                try{
-                    prevData.push(await axios.get(`https://find-my-laundry.vercel.app/laundries/${id}`));
-                }
-                catch (err) {
-                    console.log(err)
-                }
-            })
+        async function load() {
+            const recentSearch = JSON.parse(localStorage.getItem('userRecentSearch'))
+            if(recentSearch != null && recentSearch.length > 0) { 
+                setLoading(true)
+                const reqs = recentSearch.map(id => axios.get(`https://find-my-laundry.vercel.app/laundries/${id}`))
+                const res = await Promise.all(reqs)
+                const bags = res.map(res => res.data)
+                setUserRecentSearch(bags)
+                setLoading(false)
+            }
+            else {
+                localStorage.setItem('userRecentSearch', JSON.stringify([]))
+            }
         }
-        else {
-            localStorage.setItem('userRecentSearch', JSON.stringify([]))
-        }
-        setUserRecentSearch(prevData)
+        load()
     }, [])
 
 
     async function handleUserSearch(searchInputId) {
-        try {
-            const bag = axios.get(`https://find-my-laundry.vercel.app/laundries/${searchInputId}`)
-            setUserSearchResult(bag.data);
-            userRecentSearch.unshift(bag.data)
-            const prevIds = JSON.parse(localStorage.getItem('userRecentSearch'))
-            prevIds.unshift(searchInputId)
-            if(userRecentSearch.length > 5) {
-                userRecentSearch.pop()
-                prevIds.pop()
+        if(searchInputId) {
+            try {
+                setSearchMessage('Searching...')
+                setUserSearchResult(null)
+                // setUserRecentSearch(null)
+                const bag = await axios.get(`https://find-my-laundry.vercel.app/laundries/${searchInputId}`)
+                setSearchMessage('')
+                setUserSearchResult(bag.data);
+                userRecentSearch.unshift(bag.data)
+                const prevIds = JSON.parse(localStorage.getItem('userRecentSearch'))
+                prevIds.unshift(searchInputId)
+                for(let i=1;i<prevIds.length;i++) {
+                    if(prevIds[i] == searchInputId) {
+                        prevIds.splice(i,1)
+                        userRecentSearch.splice(i,1)
+                        break
+                    }
+                }
+                if(userRecentSearch.length > 5) {
+                    userRecentSearch.pop()
+                    prevIds.pop()
+                }
+                setUserRecentSearch(userRecentSearch)
+                localStorage.setItem('userRecentSearch', JSON.stringify(prevIds));
             }
-            setUserRecentSearch(userRecentSearch)
-            localStorage.setItem('userRecentSearch', JSON.stringify(prevIds));
-        }
-        catch (err) {
-            console.log(err)
+            catch (err) {
+                setSearchMessage('No bag found')
+                console.log(err)
+            }
         }
     }
 
@@ -49,7 +68,38 @@ function UserPage(props) {
     }
     
     return (
-        <div>User Page</div>
+        <div
+        className={`
+        min-h-screen
+        transition-colors
+        duration-300
+        ${props.lightTheme ? "bg-white text-black" : "bg-black text-white"}
+      `}>
+            <div
+            className='pt-3 pl-3'>
+                <ToggleThemeButton lightTheme={props.lightTheme} setLightTheme={props.setLightTheme} />
+            </div>
+            <br />
+            <div>
+                <Search handleSearch={handleUserSearch} />
+            </div>
+            <h1 className='font-bold text-2xl m-3'>{searchMessage}</h1>
+            {
+            userSearchResult != null && <UserBagBox id={userSearchResult.laundry.id} status={userSearchResult.laundry.status} lightTheme={props.lightTheme} />
+            }
+
+            <hr className={`${props.lightTheme ? 'border-gray-600' : 'border-gray-400' }`}/>
+            {userRecentSearch.length > 0 && <h1 className='font-bold text-2xl m-3'>Recently Searched</h1>}
+            {loading && <h1 className='font-bold text-2xl m-3'>Loading...</h1>}
+            <div
+            className='flex flex-col gap-5'>
+            {
+                userRecentSearch.map((data,index) => {
+                    return <UserBagBox key={index} id={data.laundry.id} status={data.laundry.status} lightTheme={props.lightTheme} />
+                })
+            }
+            </div>
+        </div>
     )
 }
 
