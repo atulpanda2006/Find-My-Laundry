@@ -1,167 +1,215 @@
-import BagIcon from '../assets/icons/shopping-bag.svg'
+import { useState } from "react";
 
-function UserBagBox(props) {
+import shoppingBag from "../assets/icons/shopping-bag.svg";
 
-  const statusStyles = {
+function UserBags(props) {
 
-    Pending: {
-      bg: 'bg-[#efe5d2]',
-      text: 'text-[#d49b00]',
-      border: 'border-[#e0bf65]',
-    },
-
-    Washed: {
-      bg: 'bg-[#dde5f2]',
-      text: 'text-[#2d6fff]',
-      border: 'border-[#7aa2ff]',
-    },
-
-    Done: {
-      bg: 'bg-[#dde8de]',
-      text: 'text-[#1f8a3d]',
-      border: 'border-[#7db68e]',
-    },
-
-    Collected: {
-      bg: 'bg-[#eadff5]',
-      text: 'text-[#7b4bc4]',
-      border: 'border-[#b193da]',
-    },
-
-  }
+  const [status, setStatus] = useState(props.status);
 
   return (
 
     <div
       className={`
-        rounded-[34px]
-        border
-        p-5
+        w-full
 
-        ${props.lightTheme
-          ? 'bg-[#f7f7f5] border-[#d6d6d6]'
-          : 'bg-[#202020] border-[#343434]'
+        border-2
+
+        rounded-3xl
+
+        px-3
+        py-3
+
+        mb-1
+
+        transition-all
+        duration-300
+
+        ${
+          props.lightTheme
+
+            ? `
+
+                bg-white
+                border-white
+
+                text-black
+
+              `
+
+            : `
+
+                bg-black
+
+                border-zinc-800
+
+                text-white
+
+              `
         }
+
       `}
     >
 
-      {/* top */}
 
-      <div className='flex justify-between items-start'>
+
+      <div className="flex items-start justify-between">
+
+
 
         <div>
 
-          <p
+          <div
             className={`
-              text-sm mb-1
+              text-xs
 
-              ${props.lightTheme
-                ? 'text-[#8f8f8f]'
-                : 'text-[#aaaaaa]'
+              ${
+                props.lightTheme
+
+                  ? "text-gray-500"
+
+                  : "text-zinc-500"
               }
             `}
           >
             Bag ID
-          </p>
+          </div>
 
-          <h2
-            className={`
-              text-[26px]
-              font-semibold
-
-              ${props.lightTheme
-                ? 'text-[#2b2b2b]'
-                : 'text-white'
-              }
-            `}
-          >
+          <div className="text-2xl font-bold">
             #{props.id}
-          </h2>
+          </div>
 
         </div>
 
-        {/* status */}
+
 
         <div
-          className={`
-            px-5
-            py-3
-            rounded-[18px]
-            border
-            text-[16px]
-            font-medium
+  className={`
 
-            ${statusStyles[props.status].bg}
-            ${statusStyles[props.status].text}
-            ${statusStyles[props.status].border}
-          `}
-        >
-          {props.status}
-        </div>
+    px-4
+    py-2
 
+    rounded-xl
+
+    text-sm
+
+    transition-all
+    duration-300
+
+    font-medium
+
+    ${
+      status === "Pending"
+
+        ? "bg-[#FEF6E1] text-[#D9A404]"
+
+        : status === "Washed"
+
+        ? "bg-[#EEF3FF] text-[#2F80ED]"
+
+        : status === "Collected"
+
+        ? "bg-[#eadff5] text-[#7b4bc4]"
+
+        : "bg-[#EBF5EC] text-[#219653]"
+    }
+
+  `}
+>
+
+  {status}
+
+</div>
       </div>
 
-      {/* content */}
+      
 
-      <div className='flex gap-5 mt-8'>
+      <div className="flex items-center mt-1">
 
-        {/* bag icon */}
+ 
 
         <div
           className={`
-            min-w-[92px]
-            h-[92px]
-            rounded-[26px]
-            flex items-center justify-center
 
-            ${props.lightTheme
-              ? 'bg-[#ece7df]'
-              : 'bg-[#2b2b2b]'
+            w-20
+            h-20
+
+            rounded-2xl
+
+            flex
+            items-center
+            justify-center
+
+            ${
+              status === "Pending"
+
+                ? "bg-[#FEF6E1]"
+
+                : status === "Washed"
+
+                ? "bg-[#EEF3FF]"
+
+                : status === "Collected"
+
+                ? "bg-[#eadff5]"
+
+                : "bg-[#EBF5EC]"
             }
+
           `}
         >
 
           <img
-            src={BagIcon}
-            alt='bag'
-            className={`
-              w-11 h-11
-              ${props.lightTheme ? '' : 'invert brightness-0'}
-            `}
+            src={shoppingBag}
+            className="w-10 h-7"
+            alt="shopping bag"
           />
 
         </div>
 
-        {/* token */}
+ 
 
-        <div className='flex flex-col justify-center'>
+        <div className="ml-5">
 
-          <p
+
+          <div className="text-xl font-semibold">
+            {props.name}
+          </div>
+
+
+
+          <div
             className={`
-              text-sm mb-2
+              text-sm
 
-              ${props.lightTheme
-                ? 'text-[#8f8f8f]'
-                : 'text-[#aaaaaa]'
+              ${
+                props.lightTheme
+
+                  ? "text-gray-600"
+
+                  : "text-zinc-400"
               }
             `}
           >
-            Laundry Token
-          </p>
+            {props.phone}
+          </div>
 
-          <p
+    
+
+          <div
             className={`
-              text-[22px]
-              font-medium
+              text-sm
 
-              ${props.lightTheme
-                ? 'text-[#2b2b2b]'
-                : 'text-white'
+              ${
+                props.lightTheme
+
+                  ? "text-gray-600"
+
+                  : "text-zinc-400"
               }
             `}
           >
-            {props.token}
-          </p>
+            {props.orderId}
+          </div>
 
         </div>
 
@@ -169,7 +217,7 @@ function UserBagBox(props) {
 
     </div>
 
-  )
+  );
 }
 
-export default UserBagBox
+export default UserBags;
