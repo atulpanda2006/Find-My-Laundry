@@ -5,11 +5,14 @@ import StaffPage from './pages/StaffPage'
 import UserPage from './pages/UserPage'
 
 function App() {
-  const [lightTheme, setLightTheme] = useState(true)
+  const [lightTheme, setLightTheme] = useState(null)
 
   useEffect(() => {
     let isLightTheme = JSON.parse(localStorage.getItem('lightTheme'))
-    if(isLightTheme === null) isLightTheme = true
+    if(isLightTheme === null){
+      isLightTheme = true
+      localStorage.setItem('lightTheme', JSON.stringify(true))
+    }
     setLightTheme(isLightTheme)
   }, [])
 
