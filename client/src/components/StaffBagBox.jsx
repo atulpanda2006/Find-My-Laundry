@@ -1,245 +1,257 @@
-import { useState } from 'react'
+import { useState } from "react";
 
-import BagIcon from '../assets/icons/shopping-bag.svg'
-import UserIcon from '../assets/icons/user-round.svg'
-import PhoneIcon from '../assets/icons/phone.svg'
-import TrashIcon from '../assets/icons/trash-2.svg'
+import shoppingBag from "../assets/icons/shopping-bag.svg";
 
-function StaffBagBox(props) {
+function Bags(props) {
 
-  const [status, setStatus] = useState(props.status)
-
-  const statusStyles = {
-    Pending: {
-      bg: 'bg-[#efe5d2]',
-      text: 'text-[#d49b00]',
-      border: 'border-[#e0bf65]',
-    },
-
-    Washed: {
-      bg: 'bg-[#dde5f2]',
-      text: 'text-[#2d6fff]',
-      border: 'border-[#7aa2ff]',
-    },
-
-    Done: {
-      bg: 'bg-[#dde8de]',
-      text: 'text-[#1f8a3d]',
-      border: 'border-[#7db68e]',
-    },
-
-    Collected: {
-      bg: 'bg-[#eadff5]',
-      text: 'text-[#7b4bc4]',
-      border: 'border-[#b193da]',
-    },
-  }
+  const [status, setStatus] = useState(props.status);
 
   return (
 
     <div
       className={`
-        rounded-[34px]
+        w-full
         border
-        p-5
+        rounded-3xl
+
+        px-3
+        py-2
+
+        mb-2
+
+        shadow-sm
+
+        transition-all
+        duration-300
 
         ${props.lightTheme
-          ? 'bg-[#f7f7f5] border-[#d6d6d6]'
-          : 'bg-[#202020] border-[#343434]'
+
+          ? "bg-white text-black border-zinc-200"
+
+          : "bg-black text-white border-zinc-800"
         }
+
       `}
     >
 
-      <div className='flex justify-between items-start'>
+      {/* TOP SECTION */}
+
+      <div className="flex items-start justify-between">
+
+        {/* BAG ID */}
 
         <div>
 
-          <p
+          <div
             className={`
-              text-sm mb-1
+              text-[10px]
+              sm:text-xs
 
               ${props.lightTheme
-                ? 'text-[#8f8f8f]'
-                : 'text-[#aaaaaa]'
+
+                ? "text-gray-400"
+
+                : "text-zinc-500"
               }
             `}
           >
             Bag ID
-          </p>
+          </div>
 
-          <h2
-            className={`
-              text-[26px]
-              font-semibold
-
-              ${props.lightTheme
-                ? 'text-[#2b2b2b]'
-                : 'text-white'
-              }
-            `}
-          >
+          <div className="text-xl sm:text-2xl font-bold">
             #{props.id}
-          </h2>
+          </div>
 
         </div>
 
-        <select
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-          className={`
-            px-5
-            py-3
-            rounded-[18px]
-            border
-            outline-none
-            text-[16px]
-            font-medium
+        {/* STATUS */}
 
-            ${statusStyles[status].bg}
-            ${statusStyles[status].text}
-            ${statusStyles[status].border}
+        <select
+
+          value={status}
+
+          onChange={(e) => setStatus(e.target.value)}
+
+          className={`
+
+            px-4
+            py-3
+
+            flex 
+
+            items-center
+
+            justify-center
+
+            rounded-lg
+
+            text-xs
+            sm:text-sm
+
+            outline-none
+
+            cursor-pointer
+
+            transition-all
+            duration-300
+
+            ${status === "Pending"
+
+              ? "bg-[#FEF6E1] text-[#D9A404]"
+
+              : status === "Washed"
+
+              ? "bg-[#EEF3FF] text-[#2F80ED]"
+
+              : status === "Collected" ? "bg-[#eadff5] text-[#7b4bc4]":
+              
+              "bg-[#EBF5EC] text-[#219653]"
+            }
+
           `}
         >
 
-          <option value='Pending'>Pending</option>
-          <option value='Washed'>Washed</option>
-          <option value='Done'>Done</option>
-          <option value='Collected'>Collected</option>
+          <option value="Pending">
+            Pending
+          </option>
+
+          <option value="Washed">
+            Washed
+          </option>
+
+          <option value="Done">
+            Done
+          </option>
+
+          <option value="Collected">
+            Collected
+          </option>
 
         </select>
 
       </div>
 
-      <div className='flex gap-5 mt-8'>
+      {/* CONTENT */}
+
+      <div className="flex items-center mt-3">
+
+        {/* ICON */}
 
         <div
           className={`
-            min-w-[92px]
-            h-[92px]
-            rounded-[26px]
-            flex items-center justify-center
 
-            ${props.lightTheme
-              ? 'bg-[#ece7df]'
-              : 'bg-[#2b2b2b]'
+            w-14
+            h-14
+
+            sm:w-16
+            sm:h-16
+
+            rounded-xl
+
+            flex
+            items-center
+            justify-center
+
+            ${status === "Pending"
+
+              ? "bg-[#FEF6E1]"
+
+              : status === "Washed"
+
+              ? "bg-[#EEF3FF]"
+
+              : "bg-[#EBF5EC]"
             }
+
           `}
         >
 
           <img
-            src={BagIcon}
-            alt='bag'
-            className={`
-              w-11 h-11
-              ${props.lightTheme ? '' : 'invert brightness-0'}
-            `}
+            src={shoppingBag}
+            className="w-7 h-7 sm:w-8 sm:h-8"
+            alt="shopping bag"
           />
 
         </div>
 
-        <div className='flex-1'>
+        {/* DETAILS */}
 
-          <div className='flex items-center gap-3 mb-4'>
+        <div className="ml-3 space-y-[2px]">
 
-            <img
-              src={UserIcon}
-              alt='user'
-              className={`
-                w-5 h-5
-                ${props.lightTheme ? '' : 'invert brightness-0'}
-              `}
-            />
-
-            <p
-              className={`
-                text-[18px]
-
-                ${props.lightTheme
-                  ? 'text-[#2b2b2b]'
-                  : 'text-white'
-                }
-              `}
-            >
-              {props.name}
-            </p>
-
+          <div className="text-base sm:text-lg font-semibold">
+            {props.name}
           </div>
 
-          <div className='flex items-center gap-3 mb-4'>
-
-            <img
-              src={PhoneIcon}
-              alt='phone'
-              className={`
-                w-5 h-5
-                ${props.lightTheme ? '' : 'invert brightness-0'}
-              `}
-            />
-
-            <p
-              className={`
-                text-[16px]
-
-                ${props.lightTheme
-                  ? 'text-[#2b2b2b]'
-                  : 'text-[#dddddd]'
-                }
-              `}
-            >
-              {props.phone}
-            </p>
-
-          </div>
-
-          <p
+          <div
             className={`
-              text-[15px]
+              text-xs
+              sm:text-sm
 
               ${props.lightTheme
-                ? 'text-[#777777]'
-                : 'text-[#aaaaaa]'
+
+                ? "text-gray-600"
+
+                : "text-zinc-400"
               }
             `}
           >
-            Token: {props.token}
-          </p>
+            {props.phone}
+          </div>
+
+          <div
+            className={`
+              text-xs
+              sm:text-sm
+
+              ${props.lightTheme
+
+                ? "text-gray-600"
+
+                : "text-zinc-400"
+              }
+            `}
+          >
+            {props.orderId}
+          </div>
 
         </div>
 
       </div>
 
-      <div className='flex justify-end mt-6'>
+      {/* DELETE */}
+
+      <div className="flex justify-end mt-2">
 
         <button
           className={`
-            flex items-center gap-2
-            text-[15px]
+
+            text-xs
+            sm:text-sm
+
+            cursor-pointer
+
+            transition-all
+            duration-300
+
+            hover:scale-105
 
             ${props.lightTheme
-              ? 'text-[#7d7d7d]'
-              : 'text-[#b0b0b0]'
+
+              ? "text-gray-400 hover:text-red-500"
+
+              : "text-zinc-500 hover:text-red-400"
             }
+
           `}
         >
-
-          <img
-            src={TrashIcon}
-            alt='delete'
-            className={`
-              w-4 h-4
-              ${props.lightTheme ? '' : 'invert brightness-0'}
-            `}
-          />
-
-          Delete
-
+          🗑 Delete
         </button>
 
       </div>
 
     </div>
 
-  )
+  );
 }
 
-export default StaffBagBox
+export default Bags;
