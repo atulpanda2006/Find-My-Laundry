@@ -34,11 +34,11 @@ function Bags(props) {
       `}
     >
 
-      {/* TOP SECTION */}
+
 
       <div className="flex items-start justify-between">
 
-        {/* BAG ID */}
+
 
         <div>
 
@@ -64,7 +64,7 @@ function Bags(props) {
 
         </div>
 
-        {/* STATUS */}
+
 
         <select
 
@@ -95,18 +95,20 @@ function Bags(props) {
             transition-all
             duration-300
 
-            ${status === "Pending"
+           ${status === "Pending"
 
-              ? "bg-[#FEF6E1] text-[#D9A404]"
+  ? "bg-[#FEF6E1] text-black"
 
-              : status === "Washed"
+  : status === "Washed"
 
-              ? "bg-[#EEF3FF] text-[#2F80ED]"
+  ? "bg-[#EEF3FF] text-black"
 
-              : status === "Collected" ? "bg-[#eadff5] text-[#7b4bc4]":
-              
-              "bg-[#EBF5EC] text-[#219653]"
-            }
+  : status === "Collected"
+
+  ? "bg-[#e4ddeb] text-black"
+
+  : "bg-[#EBF5EC] text-black"
+}
 
           `}
         >
@@ -131,11 +133,11 @@ function Bags(props) {
 
       </div>
 
-      {/* CONTENT */}
+
 
       <div className="flex items-center mt-3">
 
-        {/* ICON */}
+
 
         <div
           className={`
@@ -160,7 +162,10 @@ function Bags(props) {
 
               ? "bg-[#EEF3FF]"
 
+              : status === "Collected"
+              ? "bg-[#e4ddeb]"
               : "bg-[#EBF5EC]"
+
             }
 
           `}
@@ -174,7 +179,7 @@ function Bags(props) {
 
         </div>
 
-        {/* DETAILS */}
+
 
         <div className="ml-3 space-y-[2px]">
 
@@ -218,7 +223,7 @@ function Bags(props) {
 
       </div>
 
-      {/* DELETE */}
+
 
       <div className="flex justify-end mt-2">
 
