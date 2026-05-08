@@ -33,7 +33,7 @@ function Search(props) {
             className="
               outline-none
               text-gray-600
-              text-2xl
+              text-1.5xl
             "
           />
 

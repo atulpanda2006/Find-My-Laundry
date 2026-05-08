@@ -5,6 +5,7 @@ import StaffBagBox from '../components/StaffBagBox'
 import Search from '../components/Search'
 import { useNavigate } from 'react-router'
 import Navbar from '../components/Navbar'
+import AddBag from '../components/AddBag'
 
 function StaffPage(props) {
     const navigate = useNavigate();
@@ -14,6 +15,8 @@ function StaffPage(props) {
     const [staffRenderedBags, setStaffRenderedBags] = useState([])
     const [bagsCount, setBagsCount] = useState(0)
     const [allBagsData, setAllBagsData] = useState([])
+    const [addBagForm, setAddBagForm] = useState(false)
+    const [newBag, setNewBag] = useState({id: 0, name: '', phone: '', status: 'Pending'})
 
     useEffect(() => {
         async function loadData() {
@@ -43,7 +46,7 @@ function StaffPage(props) {
             try {
                 const token = localStorage.getItem('token')
                 setSearchMessage('Searching...')
-                const bag = await axios.get(`https://find-my-laundry.vercel.app/laundries/${searchInputId}/details`, null, {'headers': {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}})
+                const bag = await axios.get(`https://find-my-laundry.vercel.app/laundries/${searchInputId}/details`, {'headers': {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}})
                 setSearchMessage('')
                 setStaffSearchResult(bag.data.laundry);
             }
@@ -51,6 +54,30 @@ function StaffPage(props) {
                 setSearchMessage('No bag found')
                 console.log(err)
             }
+        }
+    }
+
+    async function handleAddNewBag() {
+        if(newBag.status.length > 0 && newBag.name.trim().length > 0 && newBag.phone.trim().length > 0) {
+            try {
+                const token = localStorage.getItem('token')
+                await axios.post(`https://find-my-laundry.vercel.app/laundries/`, newBag, {'headers': {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}})
+                setSearchMessage('New Bag Added')
+                setTimeout(() => setSearchMessage(''), 2000)
+                allBagsData.unshift(newBagData)
+                setAllBagsData(allBagsData)
+            }
+            catch (err) {
+                console.log(err)
+                setSearchMessage('Request Failed')
+                setTimeout(() => setSearchMessage(''), 2000)
+            }
+            finally {
+                setAddBagForm(false);
+            }
+        }
+        else {
+            alert('invalid details...')
         }
     }
 
@@ -81,7 +108,10 @@ function StaffPage(props) {
             <hr className={`${props.lightTheme ? 'border-gray-600' : 'border-gray-400' }`}/>
 
             {loading && <h1 className='font-bold text-2xl m-3'>Loading...</h1>}
-            <h1 className='font-bold text-2xl m-3'>Bags Count: {bagsCount}</h1>
+            <div className='flex justify-between p-2 items-center'>
+                <h1 className='font-bold text-2xl m-3'>Bags Count: {bagsCount}</h1>
+                <button className={`${props.lightTheme? 'bg-[#7eff61]' : 'bg-[#1c9600]'} h-fit w-fit px-3 py-1 font-bold rounded-[5px] ${props.lightTheme?'text-black': 'text-white'}`} onClick={() => setAddBagForm(true)}>New Bag</button>
+            </div>
             <div
             className='flex flex-col gap-5'>
                 {
@@ -94,6 +124,7 @@ function StaffPage(props) {
             <div className='fixed bottom-0 w-full'>
                 <Navbar lightTheme={props.lightTheme} setLightTheme={props.setLightTheme} allBagsData={allBagsData} setStaffRenderedBags={setStaffRenderedBags} setBagsCount={setBagsCount} />
             </div>
+        {addBagForm && <AddBag lightTheme={props.lightTheme} handleAddBag={handleAddNewBag} setNewBag={setNewBag} newBag={newBag} setAddBagForm={setAddBagForm}  />}
         </div>
     )
 }
