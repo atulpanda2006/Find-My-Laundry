@@ -41,9 +41,9 @@ function StaffPage(props) {
     async function handleStaffSearch(searchInputId) {
         if(searchInputId) {
             try {
-                const token = localStorage.getItem('token');
+                const token = localStorage.getItem('token')
                 setSearchMessage('Searching...')
-                const bag = await axios.get(`https://find-my-laundry.vercel.app/laundries/${searchInputId}/details`, {'headers': {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}})
+                const bag = await axios.get(`https://find-my-laundry.vercel.app/laundries/${searchInputId}/details`, null, {'headers': {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}})
                 setSearchMessage('')
                 setStaffSearchResult(bag.data.laundry);
             }
@@ -60,6 +60,7 @@ function StaffPage(props) {
         min-h-screen
         transition-colors
         duration-300
+        pb-20
         ${props.lightTheme ? "bg-white text-black" : "bg-black text-white"}`
         }>
 

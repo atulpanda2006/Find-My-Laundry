@@ -16,11 +16,17 @@ function UserPage(props) {
             const recentSearch = JSON.parse(localStorage.getItem('userRecentSearch'))
             if(recentSearch != null && recentSearch.length > 0) { 
                 setLoading(true)
-                const reqs = recentSearch.map(id => axios.get(`https://find-my-laundry.vercel.app/laundries/${id}`))
-                const res = await Promise.all(reqs)
-                const bags = res.map(res => res.data)
-                setUserRecentSearch(bags)
-                setLoading(false)
+                try {
+                    const reqs = recentSearch.map(id => axios.get(`https://find-my-laundry.vercel.app/laundries/${id}`))
+                    const res = await Promise.all(reqs)
+                    const bags = res.map(res => res.data)
+                    setUserRecentSearch(bags)
+                    setLoading(false)
+                }
+                catch (err) {
+                    console.log(err)
+                    setLoading(false)
+                }
             }
             else {
                 localStorage.setItem('userRecentSearch', JSON.stringify([]))

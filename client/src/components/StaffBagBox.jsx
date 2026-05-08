@@ -1,14 +1,72 @@
 import { useState } from "react";
-
 import shoppingBag from "../assets/icons/shopping-bag.svg";
+import MessageBox from "./MessageBox";
+import axios from "axios";
 
+let prevStatus = null
 function Bags(props) {
 
   const [status, setStatus] = useState(props.status);
+  const [statusChanged, setStatusChanged] = useState(false)
+  const [popMessage, setPopMessage] = useState(false)
+  const [messageBoxClass, setMessageBoxClass] = useState('')
+  const [messageBoxText, setMessageBoxText] = useState('')
+  const [isDeleted, setIsDeleted] = useState(false)
+
+  async function updateStatus() {
+    try {
+      const token = localStorage.getItem('token');
+      setPopMessage(true)
+      setMessageBoxClass('text-blue-400')
+      setMessageBoxText('Updating...')
+      await axios.patch(`https://find-my-laundry.vercel.app/laundries/${props.id}`, {'status': status}, {'headers': {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}})
+      setMessageBoxClass('text-lime-400')
+      setMessageBoxText('Status Updated')
+      setPopMessage(true)
+      setTimeout(() => setPopMessage(false), 1500)
+    }
+    catch (err) {
+      console.log(err)
+      setMessageBoxClass('text-red-400')
+      setMessageBoxText('Request Failed')
+      setPopMessage(true)
+      setTimeout(() => setPopMessage(false), 1500)
+    }
+    setStatusChanged(false)
+  }
+  
+  function abortStatusUpdate() {
+    setStatus(prevStatus)
+    setStatusChanged(false)
+    
+  }
+  
+  async function handleDeleteBag() {
+    if(confirm('Are you sure?')) {
+      try{
+        const token = localStorage.getItem('token')
+        setMessageBoxClass('text-blue-400')
+        setMessageBoxText('Deleting...')
+        setPopMessage(true)
+        await axios.delete(`https://find-my-laundry.vercel.app/laundries/${props.id}`, {'headers': {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}})
+        setIsDeleted(true)
+        setMessageBoxText('Bag Removed')
+        setMessageBoxClass('text-lime-400')
+        setTimeout(() => setPopMessage(false), 1500)
+      }
+      catch (err) {
+        console.log(err)
+        setMessageBoxClass('text-red-400')
+        setMessageBoxText('Request Failed')
+        setPopMessage(true)
+        setTimeout(() => setPopMessage(false), 1500)
+      }
+    }
+  }
 
   return (
 
-    <div
+  <div
       className={`
         w-full
         border
@@ -23,6 +81,7 @@ function Bags(props) {
 
         transition-all
         duration-300
+        ${isDeleted? 'hidden': 'static'}
 
         ${props.lightTheme
 
@@ -33,7 +92,6 @@ function Bags(props) {
 
       `}
     >
-
 
 
       <div className="flex items-start justify-between">
@@ -65,12 +123,16 @@ function Bags(props) {
         </div>
 
 
-
+      <div className='flex flex-col items-center gap-5'>
         <select
 
           value={status}
 
-          onChange={(e) => setStatus(e.target.value)}
+          onChange={(e) => {
+              prevStatus = status
+              setStatus(e.target.value)
+              setStatusChanged(true)
+          }}
 
           className={`
 
@@ -130,14 +192,16 @@ function Bags(props) {
           </option>
 
         </select>
-
+      <div className='float flex gap-5'>
+        {statusChanged && <button className='text-[20px]' onClick={updateStatus}>✅</button> }
+        {statusChanged && <button className='text-[20px]' onClick={abortStatusUpdate}>❌</button> }
+      </div>
+        </div>
       </div>
 
 
 
       <div className="flex items-center mt-3">
-
-
 
         <div
           className={`
@@ -220,7 +284,6 @@ function Bags(props) {
           </div>
 
         </div>
-
       </div>
 
 
@@ -228,6 +291,7 @@ function Bags(props) {
       <div className="flex justify-end mt-2">
 
         <button
+          onClick={handleDeleteBag}
           className={`
 
             text-xs
@@ -253,10 +317,10 @@ function Bags(props) {
         </button>
 
       </div>
-
+    { popMessage && <MessageBox style={messageBoxClass} text={messageBoxText} lightTheme={props.lightTheme} /> }
     </div>
 
-  );
+  )
 }
 
 export default Bags;
