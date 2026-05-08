@@ -15,7 +15,7 @@ function AddBag(props) {
       status: "Pending",
       name: "Atul Panda",
       phone: "+91 76068 31663",
-      orderId: "2501010705"
+      Enrollment_id: "2501010705"
     },
 
     {
@@ -23,15 +23,15 @@ function AddBag(props) {
       status: "Washed",
       name: "Ishan Chetwani",
       phone: "+91 88171 27466",
-      orderId: "2501010194"
+      Enrollment_id: "2501010194"
     },
 
     {
       id: "947",
       status: "Done",
-      name: "Param Malik",
+      name: "Ayush Kumar",
       phone: "+91 95965 33065",
-      orderId: "2501010177"
+      Enrollment_id: "2501010177"
     }
   ]);
 
@@ -40,7 +40,7 @@ function AddBag(props) {
     status: "Pending",
     name: "",
     phone: "",
-    orderId: ""
+    Enrollment_id: ""
   });
 
   function handleAddBag() {
@@ -49,7 +49,7 @@ function AddBag(props) {
       !newBag.id ||
       !newBag.name ||
       !newBag.phone ||
-      !newBag.orderId
+      !newBag.Enrollment_id
     ) {
       return;
     }
@@ -61,7 +61,7 @@ function AddBag(props) {
       status: "Pending",
       name: "",
       phone: "",
-      orderId: ""
+      Enrollment_id: ""
     });
 
     setShowPopup(false);
@@ -154,7 +154,7 @@ function AddBag(props) {
             status={bag.status}
             name={bag.name}
             phone={bag.phone}
-            orderId={bag.orderId}
+            Enrollment_id={bag.Enrollment_id}
 
             lightTheme={props.lightTheme}
           />
@@ -343,12 +343,12 @@ function AddBag(props) {
                   type="text"
                   placeholder="Enrollment Number"
 
-                  value={newBag.orderId}
+                  value={newBag.Enrollment_id}
 
                   onChange={(e) =>
                     setNewBag({
                       ...newBag,
-                      orderId: e.target.value
+                      Enrollment_id: e.target.value
                     })
                   }
 
