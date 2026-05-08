@@ -38,7 +38,6 @@ function Bags(props) {
   function abortStatusUpdate() {
     setStatus(prevStatus)
     setStatusChanged(false)
-    
   }
   
   async function handleDeleteBag() {

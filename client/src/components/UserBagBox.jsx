@@ -4,8 +4,6 @@ import shoppingBag from "../assets/icons/shopping-bag.svg";
 
 function UserBags(props) {
 
-  const [status, setStatus] = useState(props.status);
-
   return (
 
     <div
@@ -98,15 +96,15 @@ function UserBags(props) {
     font-medium
 
     ${
-      status === "Pending"
+      props.status === "Pending"
 
         ? "bg-[#FEF6E1] text-[#D9A404]"
 
-        : status === "Washed"
+        : props.status === "Washed"
 
         ? "bg-[#EEF3FF] text-[#2F80ED]"
 
-        : status === "Collected"
+        : props.status === "Collected"
 
         ? "bg-[#eadff5] text-[#7b4bc4]"
 
@@ -116,7 +114,7 @@ function UserBags(props) {
   `}
 >
 
-  {status}
+  {props.status}
 
 </div>
       </div>
@@ -140,15 +138,15 @@ function UserBags(props) {
             justify-center
 
             ${
-              status === "Pending"
+              props.status === "Pending"
 
                 ? "bg-[#FEF6E1]"
 
-                : status === "Washed"
+                : props.status === "Washed"
 
                 ? "bg-[#EEF3FF]"
 
-                : status === "Collected"
+                : props.status === "Collected"
 
                 ? "bg-[#eadff5]"
 

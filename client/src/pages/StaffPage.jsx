@@ -16,7 +16,7 @@ function StaffPage(props) {
     const [bagsCount, setBagsCount] = useState(0)
     const [allBagsData, setAllBagsData] = useState([])
     const [addBagForm, setAddBagForm] = useState(false)
-    const [newBag, setNewBag] = useState({id: 0, name: '', phone: '', status: 'Pending'})
+    const [newBag, setNewBag] = useState({id: '', name: '', phone: '', status: 'Pending'})
 
     useEffect(() => {
         async function loadData() {
@@ -61,11 +61,13 @@ function StaffPage(props) {
         if(newBag.status.length > 0 && newBag.name.trim().length > 0 && newBag.phone.trim().length > 0) {
             try {
                 const token = localStorage.getItem('token')
-                await axios.post(`https://find-my-laundry.vercel.app/laundries/`, newBag, {'headers': {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}})
+                await axios.post(`https://find-my-laundry.vercel.app/laundries`, newBag, {'headers': {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`}})
                 setSearchMessage('New Bag Added')
                 setTimeout(() => setSearchMessage(''), 2000)
-                allBagsData.unshift(newBagData)
+                allBagsData.unshift(newBag)
                 setAllBagsData(allBagsData)
+                setStaffSearchResult(newBag)
+                setBagsCount(bagsCount+1)
             }
             catch (err) {
                 console.log(err)

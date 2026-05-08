@@ -18,8 +18,8 @@ function UserPage(props) {
                 setLoading(true)
                 try {
                     const reqs = recentSearch.map(id => axios.get(`https://find-my-laundry.vercel.app/laundries/${id}`))
-                    const res = await Promise.all(reqs)
-                    const bags = res.map(res => res.data)
+                    const res = await Promise.allSettled(reqs)
+                    const bags = res.filter(result => result.status == 'fulfilled').map(res => res.value.data)
                     setUserRecentSearch(bags)
                     setLoading(false)
                 }
@@ -41,20 +41,18 @@ function UserPage(props) {
             try {
                 setSearchMessage('Searching...')
                 const bag = await axios.get(`https://find-my-laundry.vercel.app/laundries/${searchInputId}`)
+                console.log(bag)
                 setSearchMessage('')
                 setUserSearchResult(bag.data);
-                userRecentSearch.unshift(bag.data)
                 const prevIds = JSON.parse(localStorage.getItem('userRecentSearch'))
                 prevIds.unshift(searchInputId)
                 for(let i=1;i<prevIds.length;i++) {
                     if(prevIds[i] == searchInputId) {
                         prevIds.splice(i,1)
-                        userRecentSearch.splice(i,1)
                         break
                     }
                 }
                 if(userRecentSearch.length > 5) {
-                    userRecentSearch.pop()
                     prevIds.pop()
                 }
                 setUserRecentSearch(userRecentSearch)
@@ -65,10 +63,6 @@ function UserPage(props) {
                 console.log(err)
             }
         }
-    }
-
-    function toggleTheme() {
-        props.setLightTheme(!lightTheme)
     }
     
     return (
@@ -89,7 +83,7 @@ function UserPage(props) {
             </div>
             <h1 className='font-bold text-2xl m-3'>{searchMessage}</h1>
             {
-            userSearchResult != null && <UserBagBox id={userSearchResult.laundry.id} status={userSearchResult.laundry.status} lightTheme={props.lightTheme} />
+            (userSearchResult != null) && <UserBagBox id={userSearchResult.laundry.id} status={userSearchResult.laundry.status} lightTheme={props.lightTheme} />
             }
 
             <hr className={`${props.lightTheme ? 'border-gray-600' : 'border-gray-400' }`}/>
@@ -98,8 +92,8 @@ function UserPage(props) {
             <div
             className='flex flex-col gap-5'>
             {
-                userRecentSearch.map((data,index) => {
-                    return <UserBagBox key={index} id={data.laundry.id} status={data.laundry.status} lightTheme={props.lightTheme} />
+                userRecentSearch.map((dataa,index) => {
+                    return <UserBagBox key={index} id={dataa.laundry.id} status={dataa.laundry.status} lightTheme={props.lightTheme} />
                 })
             }
             </div>
