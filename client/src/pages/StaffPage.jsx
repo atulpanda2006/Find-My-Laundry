@@ -117,8 +117,8 @@ function StaffPage(props) {
             <div
             className='flex flex-col gap-5'>
                 {
-                    staffRenderedBags.map((data,index) => {
-                        return <StaffBagBox key={index} id={data.id} status={data.status} name={data.name} phone={data.phone} lightTheme={props.lightTheme} />
+                    staffRenderedBags.map(data => {
+                        return <StaffBagBox key={data.id} id={data.id} status={data.status} name={data.name} phone={data.phone} lightTheme={props.lightTheme} />
                     })
                 }
             </div>

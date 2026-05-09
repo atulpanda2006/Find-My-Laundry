@@ -34,7 +34,8 @@ function Search(props) {
               outline-none
               text-gray-600
               text-1.5xl
-            "
+              w-[calc(90vw-62px)]
+              "
           />
 
         </div>

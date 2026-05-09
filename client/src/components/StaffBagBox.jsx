@@ -128,7 +128,7 @@ function Bags(props) {
           value={status}
 
           onChange={(e) => {
-              prevStatus = status
+              prevStatus = props.status
               setStatus(e.target.value)
               setStatusChanged(true)
           }}
