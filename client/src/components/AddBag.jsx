@@ -57,7 +57,7 @@ function AddBag(props) {
 
           <input
             id='id'
-            type="number"
+            type="text"
             placeholder="Bag Number"
 
             value={props.newBag.id}

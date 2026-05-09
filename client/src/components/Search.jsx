@@ -26,7 +26,7 @@ function Search(props) {
           />
 
           <input
-            type="number"
+            type="text"
             placeholder="Search Laundry bag number"
             onChange={e => setsearchInput(e.target.value)}
             value={searchInput}
